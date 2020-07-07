@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include <windows.h>
 #define l 4
 #define c 8
 
 float **alocaMatriz(int lin, int col);
-void preencheMatriz(float **matriz, int lin, int col);
+int preencheMatriz(float **matriz, int lin, int col, int metodo);
 void imprimeMatriz(float **matriz, int lin, int col);
 void simplex(float **matriz, int lin, int col);
 int verificaNegativo(float **matriz, int col);
@@ -16,12 +18,21 @@ void operacoesElementares(float **matriz, int lin, int col);
 float *linhaPivo(float **matriz, int lin, int col);
 void simplex();
 
+void tokenizar(char *linha);
+void verificaTokens(char *linha);
+void validaVariaveisFO(char *linha);
+void consomeVariavel(char **linha);
+int consomeSinal(char **linha);
+
+
 int main()
 {
-    float **matriz= alocaMatriz(l, c);
-    preencheMatriz(matriz, l, c);
-    imprimeMatriz(matriz, l, c);
-    simplex(matriz, l, c);
+
+    //abrindo o arquivo
+    float **matriz = alocaMatriz(l, c);
+    preencheMatriz(matriz, l, c, 0);
+    // imprimeMatriz(matriz, l, c);
+    //simplex(matriz, l, c);
     return 0;
 }
 
@@ -34,37 +45,51 @@ float **alocaMatriz(int lin, int col)
     }
     return matriz;
 }
-void preencheMatriz(float **matriz, int lin, int col)
+int preencheMatriz(float **matriz, int lin, int col, int metodo)
 {
-    /*
-    matriz[0][0] = 1;
-    matriz[0][1] = -10;
-    matriz[0][2] = -12;
-    matriz[0][3] = -0;
-    matriz[0][4] = 0;
-    matriz[0][5] = 0;
-    matriz[1][0] = 0;
-    matriz[1][1] = 1;
-    matriz[1][2] = 1;
-    matriz[1][3] = 1;
-    matriz[1][4] = 0;
-    matriz[1][5] = 100;
-    matriz[2][0] = 0;
-    matriz[2][1] = 1;
-    matriz[2][2] = 3;
-    matriz[2][3] = 0;
-    matriz[2][4] = 1;
-    matriz[2][5] = 270;
-    */
-    for(int i=0; i<lin; i++)
+    FILE *arquivo = fopen("matriz.txt", "r");
+    char linha[100];
+    if (metodo == 1)
     {
-        for(int j=0; j<col; j++)
+        for (int i = 0; i < lin; i++)
         {
-            printf("[%d][%d] ", i,j);
-            scanf("%f", &matriz[i][j]);
+            for (int j = 0; j < col; j++)
+            {
+                printf("[%d][%d] ", i, j);
+                scanf("%f", &matriz[i][j]);
+            }
         }
     }
-    
+    else
+    {
+        if (arquivo == NULL)
+        {
+            printf("Erro na abertura do arquivo!");
+            return 1;
+        }
+        else
+        {
+            float r;
+            char car;
+            fgets(linha, 100, arquivo);
+            verificaTokens(linha);
+            // printf("%s", linha);
+            // while (!feof(arquivo))
+            {
+                //fgets(linha, 100, arquivo);
+                //tokenizar(linha);
+                //verificaTokens(linha);
+                /*fscanf(arquivo, "%c", &car);
+               if(!feof(arquivo))
+               {
+                   printf("%c", car);
+               }
+               */
+            }
+        }
+    }
+    fclose(arquivo);
+    return 0;
 }
 void imprimeMatriz(float **matriz, int lin, int col)
 {
@@ -164,7 +189,126 @@ void simplex(float **matriz, int lin, int col)
         tag = verificaNegativo(matriz, col);
         normalizaLinhaPivo(matriz, lin, col);
         operacoesElementares(matriz, lin, col);
-        if(tag)
+        if (tag)
             imprimeMatriz(matriz, lin, col);
-    }while(tag==1);
+    } while (tag == 1);
+}
+
+void tokenizar(char *linha)
+{
+    int i = 0;
+    while (linha[i] != '\0')
+    {
+        printf("%c", linha[i++]);
+    }
+}
+
+void verificaTokens(char *linha)
+{
+    int n = strlen(linha);
+    // for(int i=0; i<n; i++)
+    //{
+    if (strnicmp(linha, "Max ", 4) == 0)
+    {
+        printf("Achou Max\n");
+        linha += 4;
+        if (strnicmp(linha, "lucro ", 6) == 0)
+        {
+            linha += 6;
+            printf("Achou Lucro 6\n");
+            if (strnicmp(linha, "= ", 2) == 0)
+            {
+                linha += 2;
+                printf("Achou igual 2\n");
+                validaVariaveisFO(linha);
+            }
+            else if (strnicmp(linha, "=", 1) == 0)
+            {
+                linha += 1;
+                printf("Achou igual 1\n");
+            }
+        }
+        else if (strnicmp(linha, "lucro", 5) == 0)
+        {
+            linha += 5;
+            printf("Achou Lucro 5\n");
+        }
+        else
+        {
+            printf("nao achou lucro");
+        }
+    }
+    else
+    {
+        printf("Nao achou\n");
+    }
+    //}
+}
+
+void validaVariaveisFO(char *linha)
+{
+    int n = strlen(linha);
+    int i = 0;
+    printf("%s", linha);
+    consomeVariavel(&linha);
+    printf("%s", linha);
+    consomeSinal(&linha);
+    printf("%s", linha);
+    consomeVariavel(&linha);
+    printf("%s", linha);
+    consomeSinal(&linha);
+  
+}
+
+void consomeVariavel(char **linha)
+{
+    while ((*linha)[0] == ' ') //elimina espaços brancos
+            (*linha)++;
+    if ((*linha)[0] == 'x' || (*linha)[0] == 'X') // ver se tem a variavel sem constante
+    {
+            (*linha)++;
+        if (isdigit((*linha)[0]) == 1)
+        {
+            while (isdigit((*linha)[0]) == 1)
+            (*linha)++;
+        }
+    }
+    else if (isdigit((*linha)[0]) == 1) // ve se tem constante acompanhando variavel
+    {
+                while (isdigit((*linha)[0]) == 1) //pega todos os numeros
+            (*linha)++;
+        if ((*linha)[0] == 'x' || (*linha)[0] == 'X')
+        {
+            (*linha)++;
+            if (isdigit((*linha)[0]) == 1)
+            {
+                while (isdigit((*linha)[0]) == 1)
+            (*linha)++;
+            }
+        }
+    }
+    else
+    {
+        printf("Erro na validacao da variavel");
+    }
+}
+
+int consomeSinal(char **linha)
+{
+    while ((*linha)[0] == ' ') //elimina espaços brancos
+        (*linha)++;
+    if((*linha)[0] == '+')
+    {
+        (*linha)++;
+        return 1;
+    }
+    else if((*linha)[0] == '\n')
+    {
+        return 2;
+    }
+    else
+    {
+        printf("Erro ao consumir sinal");
+        return 0;
+    }
 }
