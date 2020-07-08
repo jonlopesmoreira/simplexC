@@ -21,9 +21,10 @@ void simplex();
 void tokenizar(char *linha);
 void verificaTokens(char *linha);
 void validaVariaveisFO(char *linha);
-void consomeVariavel(char **linha);
-int consomeSinal(char **linha);
-
+int consomeVariavelByCopia(char *linha);
+int consomeSinalByCopia(char *linha);
+int consomeVariavelByReferencia(char **linha);
+int consomeSinalByReferencia(char **linha);
 
 int main()
 {
@@ -196,18 +197,13 @@ void simplex(float **matriz, int lin, int col)
 
 void tokenizar(char *linha)
 {
-    int i = 0;
-    while (linha[i] != '\0')
-    {
-        printf("%c", linha[i++]);
-    }
+    //validaVariaveisFO(linha);
 }
 
 void verificaTokens(char *linha)
 {
     int n = strlen(linha);
-    // for(int i=0; i<n; i++)
-    //{
+
     if (strnicmp(linha, "Max ", 4) == 0)
     {
         printf("Achou Max\n");
@@ -247,63 +243,151 @@ void verificaTokens(char *linha)
 
 void validaVariaveisFO(char *linha)
 {
-    int n = strlen(linha);
-    int i = 0;
+    int tag = 1;
     printf("%s", linha);
-    consomeVariavel(&linha);
-    printf("%s", linha);
-    consomeSinal(&linha);
-    printf("%s", linha);
-    consomeVariavel(&linha);
-    printf("%s", linha);
-    consomeSinal(&linha);
-  
+    do
+    {
+        if (consomeVariavelByCopia(linha)==1)
+        {
+            consomeVariavelByReferencia(&linha);
+            printf("Consumiu linha>%s", linha);
+            if (consomeSinalByCopia(linha) == 1)
+            {                
+                consomeSinalByReferencia(&linha);
+                printf("Consumiu sinal>%s", linha);
+                tag=1;
+            }
+            else if (consomeSinalByCopia(linha) == 2)
+            {
+                consomeSinalByReferencia(&linha);
+                printf("Validacao de linha concluida com sucesso\n");
+                tag=0;
+            }
+        }
+        else
+            tag=0;
+    }while(tag==1);
+    // else
+    {
+        // printf("Erro na validacao das variaveis");
+    }
 }
 
-void consomeVariavel(char **linha)
+int consomeVariavelByReferencia(char **linha)
 {
     while ((*linha)[0] == ' ') //elimina espaços brancos
-            (*linha)++;
-    if ((*linha)[0] == 'x' || (*linha)[0] == 'X') // ver se tem a variavel sem constante
+        (*linha)++;
+    if ((*linha)[0] == 'x' || (*linha)[0] == 'X') // ver se tem a variavel x mas sem constante
     {
-            (*linha)++;
+        (*linha)++;
         if (isdigit((*linha)[0]) == 1)
         {
             while (isdigit((*linha)[0]) == 1)
-            (*linha)++;
+                (*linha)++;
+            return 1;
         }
     }
     else if (isdigit((*linha)[0]) == 1) // ve se tem constante acompanhando variavel
     {
-                while (isdigit((*linha)[0]) == 1) //pega todos os numeros
+        while (isdigit((*linha)[0]) == 1) //pega todos os numeros
             (*linha)++;
-        if ((*linha)[0] == 'x' || (*linha)[0] == 'X')
+        if ((*linha)[0] == 'x' || (*linha)[0] == 'X') // pega a variavel x
         {
             (*linha)++;
             if (isdigit((*linha)[0]) == 1)
             {
                 while (isdigit((*linha)[0]) == 1)
-            (*linha)++;
+                    (*linha)++;
+                return 1;
             }
+        }
+        else
+        {
+            printf("Erro nas variaveis da Funcao Objetivo");
+            return 0;
         }
     }
     else
     {
         printf("Erro na validacao da variavel");
+        return 0;
     }
+    return 1;
+}
+int consomeVariavelByCopia(char *linha)
+{
+    while (linha[0] == ' ') //elimina espaços brancos
+        linha++;
+    if (linha[0] == 'x' || linha[0] == 'X') // ver se tem a variavel x mas sem constante
+    {
+        linha++;
+        if (isdigit(linha[0]) == 1)
+        {
+            while (isdigit(linha[0]) == 1)
+                linha++;
+            return 1;
+        }
+    }
+    else if (isdigit(linha[0]) == 1) // ve se tem constante acompanhando variavel
+    {
+        while (isdigit(linha[0]) == 1) //pega todos os numeros
+            linha++;
+        if (linha[0] == 'x' || linha[0] == 'X') // pega a variavel x
+        {
+            linha++;
+            if (isdigit(linha[0]) == 1)
+            {
+                while (isdigit(linha[0]) == 1)
+                    linha++;
+                return 1;
+            }
+        }
+        else
+        {
+            printf("Erro nas variaveis da Funcao Objetivo");
+            return 0;
+        }
+    }
+    else
+    {
+        printf("Erro na validacao da variavel");
+        return 0;
+    }
+    return 1;
 }
 
-int consomeSinal(char **linha)
+int consomeSinalByReferencia(char **linha)
 {
     while ((*linha)[0] == ' ') //elimina espaços brancos
         (*linha)++;
-    if((*linha)[0] == '+')
+    if ((*linha)[0] == '+')
     {
         (*linha)++;
         return 1;
     }
-    else if((*linha)[0] == '\n')
+    else if ((*linha)[0] == '\n')
     {
+        (*linha)++;
+        return 2;
+    }
+    else
+    {
+        printf("Erro ao consumir sinal");
+        return 0;
+    }
+}
+int consomeSinalByCopia(char *linha)
+{
+    while (linha[0] == ' ') //elimina espaços brancos
+        linha++;
+    if (linha[0] == '+')
+    {
+        linha++;
+        return 1;
+    }
+    else if (linha[0] == '\n')
+    {
+        linha++;
         return 2;
     }
     else
