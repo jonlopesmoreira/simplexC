@@ -18,9 +18,8 @@ void operacoesElementares(float **matriz, int lin, int col);
 float *linhaPivo(float **matriz, int lin, int col);
 void simplex();
 
-void tokenizar(char *linha);
 void verificaTokens(char *linha);
-void validaVariaveisFO(char *linha);
+int validaVariaveis(char *linha);
 int consomeVariavelByCopia(char *linha);
 int consomeSinalByCopia(char *linha);
 int consomeVariavelByReferencia(char **linha);
@@ -48,7 +47,7 @@ float **alocaMatriz(int lin, int col)
 }
 int preencheMatriz(float **matriz, int lin, int col, int metodo)
 {
-    FILE *arquivo = fopen("matriz.txt", "r");
+    FILE *arquivo = fopen("simplex.txt", "r");
     char linha[100];
     if (metodo == 1)
     {
@@ -70,8 +69,7 @@ int preencheMatriz(float **matriz, int lin, int col, int metodo)
         }
         else
         {
-            float r;
-            char car;
+
             fgets(linha, 100, arquivo);
             verificaTokens(linha);
             // printf("%s", linha);
@@ -195,15 +193,9 @@ void simplex(float **matriz, int lin, int col)
     } while (tag == 1);
 }
 
-void tokenizar(char *linha)
-{
-    //validaVariaveisFO(linha);
-}
 
 void verificaTokens(char *linha)
 {
-    int n = strlen(linha);
-
     if (strnicmp(linha, "Max ", 4) == 0)
     {
         printf("Achou Max\n");
@@ -216,7 +208,13 @@ void verificaTokens(char *linha)
             {
                 linha += 2;
                 printf("Achou igual 2\n");
-                validaVariaveisFO(linha);
+               // do
+                //{
+                    validaVariaveis(linha);
+                    validaVariaveis(linha);
+               // } while (validaVariaveis(linha)==1);
+                
+                
             }
             else if (strnicmp(linha, "=", 1) == 0)
             {
@@ -238,16 +236,18 @@ void verificaTokens(char *linha)
     {
         printf("Nao achou\n");
     }
-    //}
 }
 
-void validaVariaveisFO(char *linha)
+int validaVariaveis(char *linha)
 {
+    FILE *arq = fopen("matriz.txt", "a");
+    fprintf(arq, "%d ", 1);
     int tag = 1;
+    int sucesso = 0;
     printf("%s", linha);
     do
     {
-        if (consomeVariavelByCopia(linha)==1)
+        if (consomeVariavelByCopia(linha)==1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
         {
             consomeVariavelByReferencia(&linha);
             printf("Consumiu linha>%s", linha);
@@ -262,6 +262,7 @@ void validaVariaveisFO(char *linha)
                 consomeSinalByReferencia(&linha);
                 printf("Validacao de linha concluida com sucesso\n");
                 tag=0;
+                sucesso=1;
             }
         }
         else
@@ -271,48 +272,71 @@ void validaVariaveisFO(char *linha)
     {
         // printf("Erro na validacao das variaveis");
     }
+    fclose(arq);
+    return sucesso;
 }
 
 int consomeVariavelByReferencia(char **linha)
 {
+    FILE *arq = fopen("matriz.txt", "a");
+     if (arq == NULL)
+        {
+            printf("Erro na abertura do arquivo!");
+            return 1;
+        }
+    char numeros[200];
+    int i=0;
     while ((*linha)[0] == ' ') //elimina espaços brancos
         (*linha)++;
     if ((*linha)[0] == 'x' || (*linha)[0] == 'X') // ver se tem a variavel x mas sem constante
     {
+        
         (*linha)++;
         if (isdigit((*linha)[0]) == 1)
         {
             while (isdigit((*linha)[0]) == 1)
                 (*linha)++;
+            fprintf(arq, "-1 ");
+
             return 1;
         }
     }
     else if (isdigit((*linha)[0]) == 1) // ve se tem constante acompanhando variavel
     {
         while (isdigit((*linha)[0]) == 1) //pega todos os numeros
+        {
+
+            numeros[i++] = (*linha)[0];
             (*linha)++;
+        }
+        numeros[i]='\0';
+        fprintf(arq, "-%s ", numeros);
+            
         if ((*linha)[0] == 'x' || (*linha)[0] == 'X') // pega a variavel x
         {
             (*linha)++;
             if (isdigit((*linha)[0]) == 1)
             {
                 while (isdigit((*linha)[0]) == 1)
+                {
                     (*linha)++;
+                }
                 return 1;
             }
         }
         else
         {
-            printf("Erro nas variaveis da Funcao Objetivo");
+            printf("Erro nas variaveis da Funcao Objetivo na variavel de referencia");
             return 0;
         }
     }
     else
     {
-        printf("Erro na validacao da variavel");
+        printf("Erro na validacao da variavel por referencia");
         return 0;
     }
     return 1;
+    fclose(arq);
 }
 int consomeVariavelByCopia(char *linha)
 {
@@ -344,19 +368,19 @@ int consomeVariavelByCopia(char *linha)
         }
         else
         {
-            printf("Erro nas variaveis da Funcao Objetivo");
+            printf("Erro nas variaveis da Funcao Objetivo por copia");
             return 0;
         }
     }
     else
     {
-        printf("Erro na validacao da variavel");
+        printf("Erro na validacao da variavel por copia");
         return 0;
     }
     return 1;
 }
 
-int consomeSinalByReferencia(char **linha)
+int consomeSinalByReferencia(char **linha) //1 se acha +, 2 se acha \n
 {
     while ((*linha)[0] == ' ') //elimina espaços brancos
         (*linha)++;
