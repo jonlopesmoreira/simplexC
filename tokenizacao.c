@@ -93,9 +93,9 @@ int validaRestricoesByCopia(char *linha)
     printf("%s", linha);
     do
     {
-        if (consomeVariavelByCopia(linha) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
+        if (consomeVariavelRestricoesByCopia(linha) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
         {
-            consomeVariavelByReferencia(&linha);
+            consomeVariavelRestricoesByReferencia(&linha);
             printf("Consumiu linha>%s", linha);
             if (consomeSinalByCopia(linha) == 1)
             {
@@ -219,7 +219,7 @@ int consomeVariavelFOByCopia(char *linha)
 
 
 
-int consomeVariavelByCopia(char *linha)
+int consomeVariavelRestricoesByCopia(char *linha)
 {
     while (linha[0] == ' ') //elimina espaços brancos
         linha++;
@@ -260,41 +260,7 @@ int consomeVariavelByCopia(char *linha)
     }
     return 1;
 }
-
-int validaVariaveisByReferencia(char **linha)
-{
-    FILE *arq = fopen("matriz.txt", "a");
-    int tag = 1;
-    int sucesso = 0;
-    printf("%s", (*linha));
-    do
-    {
-        if (consomeVariavelByCopia((*linha)) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
-        {
-            consomeVariavelByReferencia(&(*linha));
-            printf("Consumiu linha>%s", (*linha));
-            if (consomeSinalByCopia((*linha)) == 1)
-            {
-                consomeSinalByReferencia(&(*linha));
-                printf("Consumiu sinal>%s", (*linha));
-                tag = 1;
-            }
-            else if (consomeSinalByCopia((*linha)) == 2)
-            {
-                consomeSinalByReferencia(&(*linha));
-                printf("Validacao de linha concluida com sucesso\n");
-                tag = 0;
-                sucesso = 1;
-            }
-        }
-        else
-            tag = 0;
-    } while (tag == 1);
-    fclose(arq);
-    return sucesso;
-}
-
-int consomeVariavelByReferencia(char **linha)
+int consomeVariavelRestricoesByReferencia(char **linha)
 {
     FILE *arq = fopen("matriz.txt", "a");
     if (arq == NULL)
@@ -369,6 +335,11 @@ int consomeSinalByReferencia(char **linha) //1 se acha +, 2 se acha \n
         (*linha)++;
         return 2;
     }
+    else if ((*linha)[0] == '<' || (*linha)[0] == '=')
+    {
+        (*linha)++;
+        return 3;
+    }
     else
     {
         printf("Erro ao consumir sinal");
@@ -388,6 +359,11 @@ int consomeSinalByCopia(char *linha)
     {
         linha++;
         return 2;
+    }
+    else if (linha[0] == '<' || linha[0]=='=')
+    {
+        linha++;
+        return 3;
     }
     else
     {

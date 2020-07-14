@@ -1,10 +1,14 @@
 void verificaTokens(char *linha);
-int validaVariaveisFOByCopia(char *linha);
-int validaRestricoesByCopia(char *linha);
-int validaVariaveisByReferencia(char **linha);
-int consomeVariavelByCopia(char *linha);
-int consomeVariavelFOByCopia(char *linha);
-int consomeSinalByCopia(char *linha);
-int consomeVariavelFOByReferencia(char **linha);
-int consomeVariavelByReferencia(char **linha);
-int consomeSinalByReferencia(char **linha);
+    int validaVariaveisFOByCopia(char *linha);
+        int consomeVariavelFOByCopia(char *linha);
+        int consomeVariavelFOByReferencia(char **linha);
+        int consomeSinalByCopia(char *linha);
+        int consomeSinalByReferencia(char **linha);
+
+    int validaRestricoesByCopia(char *linha);
+        int consomeVariavelRestricoesByCopia(char *linha);
+        int consomeVariavelRestricoesByReferencia(char **linha);
+        //int consomeSinalByCopia(char *linha);
+        //int consomeSinalByReferencia(char **linha);
+
+
