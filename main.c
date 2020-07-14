@@ -5,13 +5,13 @@
 #include <windows.h>
 #include "simplex.c"
 #include "tokenizacao.c"
+#include "funcoesAuxiliares.c"
 #define l 4
 #define c 8
 
 
 int main()
 {
-
     //abrindo o arquivo
     float **matriz = alocaMatriz(l, c);
     preencheMatriz(matriz, l, c, 0);

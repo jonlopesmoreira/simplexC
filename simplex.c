@@ -1,4 +1,6 @@
 #include "simplex.h"
+#include "funcoesAuxiliares.h"
+#include "tokenizacao.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -38,11 +40,18 @@ int preencheMatriz(float **matriz, int lin, int col, int metodo)
         {
             n = contaVariaveisDeFolga();
             printf("Numero de variaveis de folga: %d\n", n);
-            while (fgets(linha, 100, arquivo) != NULL)
+            fgets(linha, 100, arquivo);
+            printf("%s", linha);
+            verificaTokens(linha);
+            fgets(linha, 100, arquivo);
+            printf("%s", linha);
+            verificaTokens(linha);
+           /* while (fgets(linha, 100, arquivo) != NULL)
             {
                 printf("%s", linha);
                 verificaTokens(linha);
             }
+            */
         }
     }
     fclose(arquivo);
