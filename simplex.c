@@ -41,11 +41,9 @@ int preencheMatriz(float **matriz, int lin, int col, int metodo)
             n = contaVariaveisDeFolga();
             printf("Numero de variaveis de folga: %d\n", n);
             fgets(linha, 100, arquivo);
-            printf("%s", linha);
-            verificaTokens(linha);
+            verificaTokens(linha, 0);
             fgets(linha, 100, arquivo);
-            printf("%s", linha);
-            verificaTokens(linha);
+            verificaTokens(linha, 1);
            /* while (fgets(linha, 100, arquivo) != NULL)
             {
                 printf("%s", linha);

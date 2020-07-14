@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include <windows.h>
 
-void verificaTokens(char *linha) // funcao chamada pra cada linha
+void verificaTokens(char *linha, int n) // funcao chamada pra cada linha
 {
     FILE *arq = fopen("matriz.txt", "a");
     if (strnicmp(linha, "Max ", 4) == 0)
@@ -20,13 +20,16 @@ void verificaTokens(char *linha) // funcao chamada pra cada linha
             {
                 linha += 2;
                 printf("Achou igual 2\n");
-                validaVariaveisFOByCopia(linha);
-                for (int i = 0; i < contaVariaveisDeFolga() + 1; i++)
+                validaVariaveisFO(linha);
+                if(n==0)
                 {
-                    fprintf(arq, "0 ");
+                    for (int i = 0; i < contaVariaveisDeFolga() + 1; i++)
+                    {
+                        fprintf(arq, "0 ");
+                    }
+                    fprintf(arq, "\n");
+                    fclose(arq);
                 }
-                fprintf(arq, "\n");
-                fclose(arq);
             }
             else if (strnicmp(linha, "=", 1) == 0)
             {
@@ -46,11 +49,11 @@ void verificaTokens(char *linha) // funcao chamada pra cada linha
     }
     else
     {
-        validaRestricoesByCopia(linha);
+        validaRestricoes(linha,n);
     }
 }
 
-int validaVariaveisFOByCopia(char *linha)
+int validaVariaveisFO(char *linha)
 {
     FILE *arq = fopen("matriz.txt", "a");
     fprintf(arq, "%d ", 1);
@@ -63,17 +66,17 @@ int validaVariaveisFOByCopia(char *linha)
         if (consomeVariavelFOByCopia(linha) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
         {
             consomeVariavelFOByReferencia(&linha);
-            printf("Consumiu linha>%s", linha);
+            printf("Consumiu variavel FO e restou:>%s", linha);
             if (consomeSinalByCopia(linha) == 1)
             {
                 consomeSinalByReferencia(&linha);
-                printf("Consumiu sinal>%s", linha);
+                printf("Consumiu sinal FO e restou:>%s", linha);
                 tag = 1;
             }
             else if (consomeSinalByCopia(linha) == 2)
             {
                 consomeSinalByReferencia(&linha);
-                printf("Validacao de linha concluida com sucesso\n");
+                printf("Validacao de linha FO concluida com sucesso\n");
                 tag = 0;
                 sucesso = 1;
             }
@@ -84,39 +87,6 @@ int validaVariaveisFOByCopia(char *linha)
     return sucesso;
 }
 
-int validaRestricoesByCopia(char *linha)
-{
-    FILE *arq = fopen("matriz.txt", "a");
-    fprintf(arq, "%d ", 1);
-    int tag = 1;
-    int sucesso = 0;
-    printf("%s", linha);
-    do
-    {
-        if (consomeVariavelRestricoesByCopia(linha) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
-        {
-            consomeVariavelRestricoesByReferencia(&linha);
-            printf("Consumiu linha>%s", linha);
-            if (consomeSinalByCopia(linha) == 1)
-            {
-                consomeSinalByReferencia(&linha);
-                printf("Consumiu sinal>%s", linha);
-                tag = 1;
-            }
-            else if (consomeSinalByCopia(linha) == 2)
-            {
-                consomeSinalByReferencia(&linha);
-                printf("Validacao de linha concluida com sucesso\n");
-                tag = 0;
-                sucesso = 1;
-            }
-        }
-        else
-            tag = 0;
-    } while (tag == 1);
-    fclose(arq);
-    return sucesso;
-}
 int consomeVariavelFOByReferencia(char **linha)
 {
     FILE *arq = fopen("matriz.txt", "a");
@@ -218,6 +188,44 @@ int consomeVariavelFOByCopia(char *linha)
 }
 
 
+int validaRestricoes(char *linha, int n)
+{
+    FILE *arq = fopen("matriz.txt", "a");
+    int tag = 1;
+    int sucesso = 0;
+    printf("%s", linha);
+    do
+    {
+        if (consomeVariavelRestricoesByCopia(linha) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
+        {
+            consomeVariavelRestricoesByReferencia(&linha);
+            printf("Consumiu variavel das restricoes e restou:>%s", linha);
+            if (consomeSinalByCopia(linha) == 1)
+            {
+                consomeSinalByReferencia(&linha);
+                printf("Consumiu sinal das restricoes e restou:>%s", linha);
+                tag = 1;
+            }
+            else if (consomeSinalByCopia(linha) == 2)
+            {
+                consomeSinalByReferencia(&linha);
+                printf("Validacao de linha de restricoes concluida com sucesso\n");
+                tag = 0;
+                sucesso = 1;
+            }
+            else if(consomeSinalByCopia(linha)== 3)
+            {
+                consomeSinalByReferencia(&linha);
+                printf("<= Foi lido>\n");
+
+            }
+        }
+        else
+            tag = 0;
+    } while (tag == 1);
+    fclose(arq);
+    return sucesso;
+}
 
 int consomeVariavelRestricoesByCopia(char *linha)
 {
@@ -266,7 +274,7 @@ int consomeVariavelRestricoesByReferencia(char **linha)
     if (arq == NULL)
     {
         printf("Erro na abertura do arquivo!");
-        return 1;
+        return 0;
     }
     char numeros[200];
     int i = 0;
@@ -280,8 +288,7 @@ int consomeVariavelRestricoesByReferencia(char **linha)
         {
             while (isdigit((*linha)[0]) == 1)
                 (*linha)++;
-            fprintf(arq, "-1 "); // -1x2 -x3 -x4 -x123123 -x999
-            return 1;
+            fprintf(arq, "1 "); // -1x2 -x3 -x4 -x123123 -x999
         }
     }
     else if (isdigit((*linha)[0]) == 1)   // ve se tem constante acompanhando variavel
@@ -292,8 +299,7 @@ int consomeVariavelRestricoesByReferencia(char **linha)
             (*linha)++;
         }
         numeros[i] = '\0';
-        fprintf(arq, "-%s ", numeros);
-
+        fprintf(arq, "%s ", numeros);
         if ((*linha)[0] == 'x' || (*linha)[0] == 'X') // pega a variavel x
         {
             (*linha)++;
@@ -303,12 +309,11 @@ int consomeVariavelRestricoesByReferencia(char **linha)
                 {
                     (*linha)++;
                 }
-                return 1;
             }
         }
         else
         {
-            printf("Erro nas variaveis da Funcao Objetivo na variavel de referencia");
+            printf("Erro nas variaveis das restricoes na variavel de referencia");
             return 0;
         }
     }
@@ -335,10 +340,14 @@ int consomeSinalByReferencia(char **linha) //1 se acha +, 2 se acha \n
         (*linha)++;
         return 2;
     }
-    else if ((*linha)[0] == '<' || (*linha)[0] == '=')
+    else if ((*linha)[0] == '<' )
     {
         (*linha)++;
-        return 3;
+        if((*linha)[0] == '=')
+        {
+            (*linha)++;
+            return 3;
+        }
     }
     else
     {
@@ -360,10 +369,15 @@ int consomeSinalByCopia(char *linha)
         linha++;
         return 2;
     }
-    else if (linha[0] == '<' || linha[0]=='=')
+    else if (linha[0] == '<')
     {
         linha++;
-        return 3;
+        if(linha[0]=='=')
+        {
+            linha++;
+            return 3;
+        }
+        
     }
     else
     {
