@@ -10,16 +10,13 @@ void verificaTokens(char *linha, int n) // funcao chamada pra cada linha
     FILE *arq = fopen("matriz.txt", "a");
     if (strnicmp(linha, "Max ", 4) == 0)
     {
-        printf("Achou Max\n");
         linha += 4;
         if (strnicmp(linha, "lucro ", 6) == 0)
         {
             linha += 6;
-            printf("Achou Lucro 6\n");
             if (strnicmp(linha, "= ", 2) == 0)
             {
                 linha += 2;
-                printf("Achou igual 2\n");
                 validaVariaveisFO(linha);
                 if(n==0)
                 {
@@ -34,17 +31,15 @@ void verificaTokens(char *linha, int n) // funcao chamada pra cada linha
             else if (strnicmp(linha, "=", 1) == 0)
             {
                 linha += 1;
-                printf("Achou igual 1\n");
             }
         }
         else if (strnicmp(linha, "lucro", 5) == 0)
         {
             linha += 5;
-            printf("Achou Lucro 5\n");
         }
         else
         {
-            printf("nao achou lucro");
+
         }
     }
     else
@@ -60,23 +55,19 @@ int validaVariaveisFO(char *linha)
     fclose(arq);
     int tag = 1;
     int sucesso = 0;
-    printf("%s", linha);
     do
     {
         if (consomeVariavelFOByCopia(linha) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
         {
             consomeVariavelFOByReferencia(&linha);
-            printf("Consumiu variavel FO e restou:>%s", linha);
             if (consomeSinalByCopia(linha) == 1)
             {
                 consomeSinalByReferencia(&linha);
-                printf("Consumiu sinal FO e restou:>%s", linha);
                 tag = 1;
             }
             else if (consomeSinalByCopia(linha) == 2)
             {
                 consomeSinalByReferencia(&linha);
-                printf("Validacao de linha FO concluida com sucesso\n");
                 tag = 0;
                 sucesso = 1;
             }
@@ -195,29 +186,24 @@ int validaRestricoes(char *linha, int n)
     int sucesso = 0;
     fprintf(arq, "0 ");
     fclose(arq);
-    printf("%s", linha);
     do
     {
         if (consomeVariavelRestricoesByCopia(linha) == 1) // retorna 1 se consumiu 10x1 por exemplo, 0 se não
         {
             consomeVariavelRestricoesByReferencia(&linha);
-            printf("Consumiu variavel das restricoes e restou:>%s", linha);
             if (consomeSinalByCopia(linha) == 1)
             {
                 consomeSinalByReferencia(&linha);
-                printf("Consumiu sinal das restricoes e restou:>%s", linha);
                 tag = 1;
             }
             else if (consomeSinalByCopia(linha) == 2)
             {
                 consomeSinalByReferencia(&linha);
-                printf("Validacao de linha de restricoes concluida com sucesso\n");
                 tag = 0;
                 sucesso = 1;
             }
             else if(consomeSinalByCopia(linha)== 3)
             {
-                printf("<= Foi lido>\n");
                 vetorUnitario(n);
                 if(consomeNumeroRestricoesByCopia(linha) == 1)
                 {

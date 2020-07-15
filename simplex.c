@@ -13,43 +13,43 @@ float **alocaMatriz(int lin, int col)
     }
     return matriz;
 }
-int preencheMatriz(float **matriz, int lin, int col, int metodo)
+int interpretarModelo()
 {
     FILE *arquivo = fopen("simplex.txt", "r");
     char linha[100];
-    int i=0, n;
-    if (metodo == 1)
+    int i=0,  n = 0;
+    if (arquivo == NULL)
     {
-        for (int i = 0; i < lin; i++)
-        {
-            for (int j = 0; j < col; j++)
-            {
-                printf("[%d][%d] ", i, j);
-                scanf("%f", &matriz[i][j]);
-            }
-        }
+        printf("Erro na abertura do arquivo!");
+        return 0;
     }
     else
     {
-        if (arquivo == NULL)
+        n = contaVariaveisDeFolga();
+        printf("Numero de variaveis de folga: %d\n", n);
+        while (fgets(linha, 100, arquivo) != NULL)
         {
-            printf("Erro na abertura do arquivo!");
-            return 1;
-        }
-        else
-        {
-            n = contaVariaveisDeFolga();
-            printf("Numero de variaveis de folga: %d\n", n);
-            while (fgets(linha, 100, arquivo) != NULL)
-            {
-                printf("%s", linha);
-                verificaTokens(linha, i++);
-            }
+            printf("%s", linha);
+            verificaTokens(linha, i++);
         }
     }
     fclose(arquivo);
-    return 0;
+    return 1;
 }
+
+void preencheMatriz(float **matriz, int lin, int col)
+{
+
+    for (int i = 0; i < lin; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            printf("[%d][%d] ", i, j);
+            scanf("%f", &matriz[i][j]);
+        }
+    }
+}
+
 void imprimeMatriz(float **matriz, int lin, int col)
 {
     for (int i = 0; i < lin; i++)
