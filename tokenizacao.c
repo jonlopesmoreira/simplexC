@@ -24,7 +24,7 @@ void verificaTokens(char *linha, int n) // funcao chamada pra cada linha
                     {
                         fprintf(arq, "0 ");
                     }
-                    fprintf(arq, "\n");
+                    fprintf(arq, ";\n");
                     fclose(arq);
                 }
             }
@@ -293,7 +293,7 @@ int consomeNumeroRestricoesByReferencia(char **linha)
         }
         numeros[i] = '\0';
         fprintf(arq, "%s ", numeros);
-        fprintf(arq, "\n");
+        fprintf(arq, ";\n");
         fclose(arq);
         return 1;
     }

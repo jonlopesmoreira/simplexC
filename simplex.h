@@ -1,6 +1,7 @@
 float **alocaMatriz(int lin, int col);
 int interpretarModelo();
-void preencheMatriz(float **matriz, int lin, int col);
+int interpretaMatriz(int *numLinhas, int *numColunas);
+float  **preencheMatriz( int lin, int col);
 void imprimeMatriz(float **matriz, int lin, int col);
 void simplex(float **matriz, int lin, int col);
 int verificaNegativo(float **matriz, int col);

@@ -6,7 +6,11 @@
 
 int main()
 {
+    int numLinhas, numColunas;
     interpretarModelo();
+    interpretaMatriz(&numLinhas,&numColunas);
+    float **matriz = preencheMatriz(numLinhas, numColunas);
+    imprimeMatriz(matriz,numLinhas, numColunas);
     return 0;
 }
 

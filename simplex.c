@@ -3,6 +3,7 @@
 #include "tokenizacao.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 float **alocaMatriz(int lin, int col)
 {
@@ -16,6 +17,8 @@ float **alocaMatriz(int lin, int col)
 int interpretarModelo()
 {
     FILE *arquivo = fopen("simplex.txt", "r");
+    FILE *arquivo2 = fopen("matriz.txt", "w");
+    fclose(arquivo2);
     char linha[100];
     int i=0,  n = 0;
     if (arquivo == NULL)
@@ -32,22 +35,58 @@ int interpretarModelo()
             printf("%s", linha);
             verificaTokens(linha, i++);
         }
+        printf("\n");
     }
     fclose(arquivo);
     return 1;
 }
 
-void preencheMatriz(float **matriz, int lin, int col)
+int interpretaMatriz(int *numLinhas, int *numColunas)
 {
+    FILE *arq = fopen("matriz.txt", "r");
+    char numero[100];
+    int flag = 0;
+    (*numColunas)=0;
+    (*numLinhas)=0;
+
+    while(fscanf(arq, "%s", numero) != EOF)
+    {
+        if(strcmp(numero, ";")==0)
+        {
+            flag=1;
+            (*numLinhas)++;
+        }
+         if(flag==0)
+            (*numColunas)++;   
+    }
+     if(feof(arq))
+        puts("O arquivo inteiro foi lido.");
+    else 
+        puts("O indicador de fim de arquivo (EOF) não está marcado. Um erro ocorreu.");
+    fclose(arq);
+}
+float **preencheMatriz(int lin, int col)
+{
+    FILE *arq = fopen("matriz.txt", "r");
+    float numero;
+    char trash[10];
+    float **matriz = (float**) malloc(sizeof(float*)*lin);
 
     for (int i = 0; i < lin; i++)
+       matriz[i] = (float*) malloc(sizeof(float)*col);
+    
+    for( int i=0; i<lin; i++)
     {
-        for (int j = 0; j < col; j++)
+        for(int j=0; j<col; j++)
         {
-            printf("[%d][%d] ", i, j);
-            scanf("%f", &matriz[i][j]);
+            fscanf(arq,"%f", &numero);
+            matriz[i][j] = numero;
         }
+        fscanf(arq,"%s", trash);
     }
+    fclose(arq);
+    return matriz;
+
 }
 
 void imprimeMatriz(float **matriz, int lin, int col)
