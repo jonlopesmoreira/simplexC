@@ -45,6 +45,7 @@ Example of output:
 Obs1: Fill with 0 the variable that doesnt exist, if in your model the variable doesnt exist, for example:
 
 'WRONG': 
+
 max lucro = 2x1 + 3x2 + 4x3
 
 x1 + x2 + x3 <= 100     
@@ -56,6 +57,7 @@ x2 + 9x1 <= 80    /* here x3 is missing */
 to fix you need to:
 
 'CORRECT':
+
 max lucro = 2x1 + 3x2 + 4x3
 
 x1 + x2 + x3 <= 100
