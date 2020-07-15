@@ -18,7 +18,9 @@ You need to have one objective function respecting the "Max" and "Lucro" words, 
 type it with upper or lower case, doesnt really matter, the examples:
 
 max lucro = 10x1 + 12x2 */CORRECT*/
+
 MAX LUCRO = 10x1 + 12x2 */CORRECT*/
+
 mAx lUcRo = 10x1 + 12x2 */CORRECT*/
 
 Doesnt generate a bug at running the program.
