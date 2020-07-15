@@ -9,7 +9,9 @@ All you need to run the program is insert the optimization model in the file mod
 'model.txt'
 
 Max Lucro = 10x1 + 12x2
+
 x1 + x2 <= 100
+
 x1 + 3x2 <= 270
 
 obs: there are 2 example of models in the paste model for you test the program
@@ -33,7 +35,9 @@ at your terminal.
 Example of output:
 
   1.000   0.000   0.000   9.000   1.000 1170.000
+
   0.000   1.000   0.000   1.500  -0.500  15.000
+
   0.000   0.000   1.000  -0.500   0.500  85.000
 
 ==================================================================
@@ -42,17 +46,24 @@ Obs1: Fill with 0 the variable that doesnt exist, if in your model the variable 
 
 'WRONG': 
 max lucro = 2x1 + 3x2 + 4x3
+
 x1 + x2 + x3 <= 100     
-2x1 + 5x3  <= 210 /* look here that the x2 is missing, it will generate error reading the variables */
+
+2x1 + 5x3  <= 210 /* look here that the x2 is missing*/
+
 x2 + 9x1 <= 80    /* here x3 is missing */
 
 to fix you need to:
 
 'CORRECT':
 max lucro = 2x1 + 3x2 + 4x3
+
 x1 + x2 + x3 <= 100
+
 2x1 + x2 + 0x3 <= 210
+
 x1 + 0x2 + 0x3 <= 80
+
 
 ==================================================================
 
