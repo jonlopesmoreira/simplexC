@@ -16,7 +16,7 @@ float **alocaMatriz(int lin, int col)
 }
 int interpretarModelo()
 {
-    FILE *arquivo = fopen("simplex.txt", "r");
+    FILE *arquivo = fopen("model.txt", "r");
     FILE *arquivo2 = fopen("matriz.txt", "w");
     fclose(arquivo2);
     char linha[100];
@@ -60,7 +60,7 @@ int interpretaMatriz(int *numLinhas, int *numColunas)
             (*numColunas)++;   
     }
      if(feof(arq))
-        puts("O arquivo inteiro foi lido.");
+        puts("\nO arquivo inteiro foi lido.\n");
     else 
     {
         puts("O indicador de fim de arquivo (EOF) não está marcado. Um erro ocorreu.");

@@ -4,7 +4,7 @@ int contaVariaveisDeFolga()
     char caracter;
     int flag = 0;
     int contFolgas = 0;
-    if ((arq = fopen("simplex.txt", "r")) != NULL)
+    if ((arq = fopen("model.txt", "r")) != NULL)
     {
         while ((caracter = fgetc(arq)) != EOF)
         {

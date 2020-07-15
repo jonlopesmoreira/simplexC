@@ -1,0 +1,13 @@
+max lucro = 2x1 + 3x2 + 4x3
+x1 + x2 + x3 <= 100
+2x1 + x2 + 0x3 <= 210
+x1 + 0x2 + 0x3 <= 80
+
+
+
+/*
+    This example model was taken from a online teacher of simplex from Brazil
+    at: https://www.youtube.com/watch?v=0joAFaJZHdY
+
+    Dont copy this commentary at model.txt if you want to test it.
+*/

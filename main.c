@@ -10,6 +10,7 @@ int main()
     interpretaMatriz(&numLinhas,&numColunas);
     float **matriz = preencheMatriz(numLinhas, numColunas);
     imprimeMatriz(matriz,numLinhas, numColunas);
+    simplex(matriz, numLinhas, numColunas);
     return 0;
 }
 

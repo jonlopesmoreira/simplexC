@@ -1,0 +1,11 @@
+Max Lucro = 10x1 + 12x2
+x1 + x2 <= 100
+x1 + 3x2 <= 270
+
+
+/*
+    This example model was taken from a online teacher of simplex from Brazil
+    at: https://www.youtube.com/watch?v=uendv1Khpcw
+
+    Dont copy this commentary at model.txt if you want to test it.
+*/
