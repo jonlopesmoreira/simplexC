@@ -35,7 +35,7 @@ void vetorUnitario(int n)
     int *vet = (int*) malloc(sizeof(int)*contaVariaveisDeFolga());
     for(int i=0; i<contaVariaveisDeFolga(); i++)
         vet[i] = 0;
-    vet[n-1] = 0;
+    vet[n-1] = 1;
     for(int i=0; i<contaVariaveisDeFolga(); i++)
         fprintf(arq,"%d ", vet[i]);
     fclose(arq);

@@ -10,5 +10,8 @@ void verificaTokens(char *linha, int n);
         int consomeVariavelRestricoesByReferencia(char **linha);
         //int consomeSinalByCopia(char *linha);
         //int consomeSinalByReferencia(char **linha);
+        int consomeNumeroRestricoesByCopia(char *linha);
+        int consomeNumeroRestricoesByReferencia(char **linha);
+
 
 

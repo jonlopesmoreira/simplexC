@@ -17,7 +17,7 @@ int preencheMatriz(float **matriz, int lin, int col, int metodo)
 {
     FILE *arquivo = fopen("simplex.txt", "r");
     char linha[100];
-    int n;
+    int i=0, n;
     if (metodo == 1)
     {
         for (int i = 0; i < lin; i++)
@@ -40,16 +40,11 @@ int preencheMatriz(float **matriz, int lin, int col, int metodo)
         {
             n = contaVariaveisDeFolga();
             printf("Numero de variaveis de folga: %d\n", n);
-            fgets(linha, 100, arquivo);
-            verificaTokens(linha, 0);
-            fgets(linha, 100, arquivo);
-            verificaTokens(linha, 1);
-           /* while (fgets(linha, 100, arquivo) != NULL)
+            while (fgets(linha, 100, arquivo) != NULL)
             {
                 printf("%s", linha);
-                verificaTokens(linha);
+                verificaTokens(linha, i++);
             }
-            */
         }
     }
     fclose(arquivo);

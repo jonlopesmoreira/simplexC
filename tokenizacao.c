@@ -193,6 +193,8 @@ int validaRestricoes(char *linha, int n)
     FILE *arq = fopen("matriz.txt", "a");
     int tag = 1;
     int sucesso = 0;
+    fprintf(arq, "0 ");
+    fclose(arq);
     printf("%s", linha);
     do
     {
@@ -215,15 +217,19 @@ int validaRestricoes(char *linha, int n)
             }
             else if(consomeSinalByCopia(linha)== 3)
             {
-                consomeSinalByReferencia(&linha);
                 printf("<= Foi lido>\n");
-
+                vetorUnitario(n);
+                if(consomeNumeroRestricoesByCopia(linha) == 1)
+                {
+                    consomeNumeroRestricoesByReferencia(&linha);
+                }
+                tag = 0;
+                sucesso=1;
             }
         }
         else
             tag = 0;
     } while (tag == 1);
-    fclose(arq);
     return sucesso;
 }
 
@@ -266,6 +272,52 @@ int consomeVariavelRestricoesByCopia(char *linha)
         printf("Erro na validacao da variavel por copia");
         return 0;
     }
+    return 1;
+}
+int consomeNumeroRestricoesByCopia(char *linha)
+{
+     while (linha[0] == ' ' || isdigit(linha[0]) != 1) //elimina espaços brancos
+        linha++;
+    if (isdigit(linha[0]) == 1)
+    { 
+        while (isdigit(linha[0]) == 1)
+            linha++;
+        return 1;
+    }
+    else
+    {
+        printf("Erro no vetor B");
+        return 0;
+    }
+    return 1;
+}
+int consomeNumeroRestricoesByReferencia(char **linha)
+{
+    FILE *arq = fopen("matriz.txt", "a");
+    char numeros[200];
+    int i=0;
+    while ( (*linha)[0] == ' ' || isdigit((*linha)[0]) != 1) //elimina espaços brancos
+        (*linha)++;
+    if (isdigit((*linha)[0]) == 1)
+    { 
+        while (isdigit((*linha)[0]) == 1)
+        {
+            numeros[i++] = (*linha)[0];
+            (*linha)++;
+        }
+        numeros[i] = '\0';
+        fprintf(arq, "%s ", numeros);
+        fprintf(arq, "\n");
+        fclose(arq);
+        return 1;
+    }
+    else
+    {
+        printf("Erro no vetor B");
+        fclose(arq);
+        return 0;
+    }
+    fclose(arq);
     return 1;
 }
 int consomeVariavelRestricoesByReferencia(char **linha)
@@ -354,6 +406,7 @@ int consomeSinalByReferencia(char **linha) //1 se acha +, 2 se acha \n
         printf("Erro ao consumir sinal");
         return 0;
     }
+    return 0;
 }
 int consomeSinalByCopia(char *linha)
 {
@@ -384,4 +437,5 @@ int consomeSinalByCopia(char *linha)
         printf("Erro ao consumir sinal");
         return 0;
     }
+    return 0;
 }
