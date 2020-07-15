@@ -3,7 +3,6 @@
 #include "tokenizacao.c"
 #include "funcoesAuxiliares.c"
 
-
 int main()
 {
     int numLinhas, numColunas;
