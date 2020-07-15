@@ -62,8 +62,13 @@ int interpretaMatriz(int *numLinhas, int *numColunas)
      if(feof(arq))
         puts("O arquivo inteiro foi lido.");
     else 
+    {
         puts("O indicador de fim de arquivo (EOF) não está marcado. Um erro ocorreu.");
+        fclose(arq);
+        return 0;
+    }
     fclose(arq);
+    return 1;
 }
 float **preencheMatriz(int lin, int col)
 {
